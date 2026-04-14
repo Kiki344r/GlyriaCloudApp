@@ -4,31 +4,51 @@ declare global {
   interface groupData {
     UUID: string
     name: string
+    defaultRoleId: string
     ownerId: string
-    owner: {
-      UUID: string
-      firstName: string
-      lastName: string
-    }
+    owner: groupUserData
   }
 
   interface groupUserData {
+    UUID: string
     firstName: string
     lastName: string
-    UUID: string
   }
 
   interface groupDataGlobal extends groupData {
     members: groupMember[]
+    roles: {
+      UUID: string
+      name: string
+      permissions: string[]
+      members: string[]
+    }[]
   }
 
   interface groupMember {
     user: groupUserData
-    role: string
+    role: {
+      UUID: string
+      name: string
+    }
+  }
+
+  interface groupRole {
+    UUID: string
+    name: string
+    permissions: string[]
   }
 
   interface groupDataById {
     group: groupDataGlobal
-    permissions: string[]
+    role: groupRole
   }
+
+
+  interface groupCode {
+    UUID: string
+    code: string
+    createdAt: string
+  }
+
 }

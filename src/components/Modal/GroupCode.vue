@@ -62,7 +62,7 @@ const zodSchema = z.object({
   groupCode: z.string()
       .min(1, 'Le code est requis')
       .regex(/^[A-Z0-9-a-z]+$/, 'Le code doit être composé de lettres majuscules et de chiffres uniquement')
-      .refine(code => /^[a-z-Z0-9]{4}-?[a-zA-Z0-9]{4}$/.test(code), 'Le code doit être au format XXXX-XXXX ou XXXXXXXX')
+      .refine(code => /^[A-Za-z0-9]{4}-?[A-Za-z0-9]{4}$/.test(code), 'Le code doit être au format XXXX-XXXX ou XXXXXXXX')
 
 })
 

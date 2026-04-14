@@ -35,8 +35,9 @@ export default function useApi() {
     const apiUrl = runtimeConfig.public.api_url
 
     try {
-      let requestUrl = `${apiUrl}/v${data.version}/${data.route}`
 
+      let requestUrl = `${apiUrl}/v${data.version}/${data.route}`
+      console.log('Request: ', requestUrl, data)
       if (data.method === 'get' && data.options) requestUrl += `?${new URLSearchParams(data.options)}`
 
       const res = await fetch(`${requestUrl}`, {
@@ -48,6 +49,7 @@ export default function useApi() {
         },
         body: data.method !== 'get' ? JSON.stringify(data.data) : undefined,
       })
+      console.log('Response: ', res)
       const resData = await res.json() as response
 
       if (!res.ok) {

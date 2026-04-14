@@ -18,7 +18,7 @@
     }"
   >
     <slot name="trigger">
-      <UButton v-if="button.label" v-bind="button" @click="modelOpen = true" />
+      <UButton v-if="button.label" v-bind="button" @click="modelOpen = true; emit('click')" />
     </slot>
 
     <template #body>
@@ -78,7 +78,8 @@ const emit = defineEmits([
   'update:loading',
   'update:disableClose',
   'submit',
-  'close'
+  'close',
+    'click'
 ])
 
 // Gestion du v-model:open

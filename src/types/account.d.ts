@@ -5,7 +5,7 @@ declare global {
     firstName: string
     lastName: string
     email: string
-    groups: groupData[]
+    memberships: groupData[]
     UUID: string
   }
 }

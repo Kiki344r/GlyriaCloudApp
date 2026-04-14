@@ -1,15 +1,13 @@
 export default function useGroups() {
-  const { requestPost, requestGet, requestDelete } = useApi()
+  const { requestPost, requestGet, requestDelete, requestPatch } = useApi()
   const toast = useToast()
+  const router = useRouter()
 
-  const { groups } = useGroupsStore()
+  const groupsStore = useGroupsStore()
+  const {groups} = storeToRefs(groupsStore)
 
   const updateGroups = async () => {
-    const newGroups = await getGroups()
-    if (!newGroups) return false
-    groups.length = 0
-    groups.push(...newGroups)
-    return true
+    return await groupsStore.fetchGroups()
   }
 
   const joinGroup = async (code: string) => {
@@ -19,8 +17,6 @@ export default function useGroups() {
       data: { code }
     }, true)
 
-    console.log('Join group, status: ', status, ', data: ', data, '')
-
     if (!status || !data) return false
 
     if (data.success) {
@@ -29,6 +25,9 @@ export default function useGroups() {
         description: `Vous avez rejoint le groupe ${data.data.name}`,
         color: 'success'
       })
+
+      await updateGroups()
+
       return true
     } else return false
   }
@@ -40,6 +39,10 @@ export default function useGroups() {
       data: { groupId: UUID }
     }, true)
     if (!status || !data) return false
+
+    await updateGroups()
+    router.push('/dashboard/groupes')
+
     return data.success
   }
 
@@ -62,9 +65,89 @@ export default function useGroups() {
     return data.data as groupDataById
   }
 
+  const createRole = async (data: { groupId: string, name: string, permissions: string[] }) => {
+    const { status, data: res } = await requestPost({
+      version: 1,
+      route: 'group/role',
+      data
+    })
+    if (!status || !res) return false
+    return res.data
+  }
+
+  const updateRole = async (data: { groupId: string, name: string, permissions: string[], UUID: string }) => {
+    const { status, data: res } = await requestPost({
+      version: 1,
+      route: 'group/update-role',
+      data
+    })
+    if (!status || !res) return false
+    return res.data
+  }
+
+  const deleteRole = async (data: {groupId: string, UUID: string}) => {
+    const { status, data: res } = await requestDelete({
+      version: 1,
+      route: 'group/role',
+      data
+    })
+    if (!status || !res) return false
+    return res.data
+  }
+
   const getGroupsRef = (): Ref<groupData[]> => {
     const groupStore = useGroupsStore()
     return storeToRefs(groupStore).groups
+  }
+
+  const updateDefaultRole = async (data: {groupId: string, roleId: string}) => {
+    const { status, data: res } = await requestPost({
+      version: 1,
+      route: 'group/default-role',
+      data
+    })
+    if (!status || !res) return false
+    return res.data
+  }
+
+  const updateMemberRole = async (data: {groupId: string, userId: string, roleId: string}) => {
+    const { status, data: res } = await requestPost({
+      version: 1,
+      route: 'group/member-role',
+      data
+    })
+    if (!status || !res) return false
+    return res.data
+  }
+
+  const getCodes = async (groupId: string) => {
+    const { status, data } = await requestGet({
+      version: 1,
+      route: 'group/codes',
+      options: { groupId }
+    }, false)
+    if (!status || !data) return false
+    return data.data as groupCode[]
+  }
+
+  const createCode = async (groupId: string) => {
+    const { status, data } = await requestPost({
+      version: 1,
+      route: 'group/code',
+      data: { groupId }
+    })
+    if (!status || !data) return false
+    return data.data as string
+  }
+
+  const deleteCode = async (data: {groupId: string, code: string}) => {
+    const { status, data: res } = await requestDelete({
+      version: 1,
+      route: 'group/code',
+      data
+    })
+    if (!status || !res) return false
+    return res.data
   }
 
   return {
@@ -73,6 +156,14 @@ export default function useGroups() {
     getGroups,
     getGroupById,
     getGroupsRef,
-    updateGroups
+    updateGroups,
+    createRole,
+    updateRole,
+    deleteRole,
+    updateDefaultRole,
+    updateMemberRole,
+    getCodes,
+    createCode,
+    deleteCode,
   }
 }

@@ -94,16 +94,28 @@
 <script setup lang="ts">
 import type {NavigationMenuItem} from '@nuxt/ui'
 
-const {getGroupsRef} = useGroups()
+const {getGroupsRef, getGroupById} = useGroups()
 const groups = getGroupsRef()
+const router = useRouter()
+const toast = useToast()
 
 const groupdId = useRoute().params.groupId as string
+const group = await getGroupById(groupdId)
+if (!group) {
+  toast.add({
+    title: 'Groupe introuvable',
+    description: 'Le groupe que vous recherchez n\'existe pas.',
+    color: 'error',
+    icon: 'i-heroicons-x-circle'
+  })
+  throw router.push('/dashboard/groupes')
+}
 
 // On sépare les items pour plus de clarté
-const mainNavigation: NavigationMenuItem[] = [
+const mainNavigation = computed<NavigationMenuItem[]>(() => [
   {
     label: 'Tableau de bord',
-    icon: 'i-heroicons-squares-2x2', // Plus moderne que house
+    icon: 'i-heroicons-squares-2x2',
     to: '/dashboard',
     exact: true
   },
@@ -122,13 +134,13 @@ const mainNavigation: NavigationMenuItem[] = [
     icon: 'i-heroicons-cog-6-tooth',
     to: '/dashboard/settings',
     children: [
-      {label: 'Général', to: '/dashboard/settings'},
-      {label: 'Membres', to: '/dashboard/settings/members'},
-      {label: 'Sécurité', to: '/dashboard/settings/security'},
-      {label: 'Application', to: '/dashboard/settings/app'}
+      { label: 'Général', to: '/dashboard/settings' },
+      { label: 'Membres', to: '/dashboard/settings/members' },
+      { label: 'Sécurité', to: '/dashboard/settings/security' },
+      { label: 'Application', to: '/dashboard/settings/app' }
     ]
   }
-]
+])
 
 const secondaryNavigation: NavigationMenuItem[] = [
   {
@@ -149,18 +161,40 @@ const secondaryNavigation: NavigationMenuItem[] = [
   }
 ]
 
-const groupesNavigation: NavigationMenuItem[] = [
-  {
-    label: 'Mes Exercices',
+const PERMISSION_ITEMS: Record<string, NavigationMenuItem> = {
+  'EXERCISES': {
+    label: 'Exercices',
     icon: 'i-heroicons-command-line',
     to: `/dashboard/groupes/${groupdId}/exercices`,
-    badge: {
-      color: 'primary',
-      variant: 'subtle',
-      label: '3',
-      size: 'xs'
-    }
   },
-]
+  'MANAGE_EXERCISES': {
+    label: 'Gérer les Exercices',
+    icon: 'i-heroicons-cog-6-tooth',
+    to: `/dashboard/groupes/${groupdId}/manage-exercices`,
+  },
+  'MANAGE_MEMBERS': {
+    label: 'Gérer les Membres',
+    icon: 'i-heroicons-users',
+    to: `/dashboard/groupes/${groupdId}/manage-members`,
+  },
+  'MANAGE_CODES': {
+    label: 'Gérer les Codes',
+    icon: 'i-heroicons-key',
+    to: `/dashboard/groupes/${groupdId}/manage-codes`,
+  },
+  'MANAGE_ROLES': {
+    label: "Gérer les roles",
+    icon: 'i-heroicons-shield-check',
+    to: `/dashboard/groupes/${groupdId}/manage-roles`,
+  },
+  'MANAGE_SETTINGS': {
+    label: 'Paramètres du Groupe',
+    icon: 'i-heroicons-cog-6-tooth',
+    to: `/dashboard/groupes/${groupdId}/settings`,
+  },
+}
+const groupesNavigation = Object.keys(PERMISSION_ITEMS)
+    .filter(key => group.role.permissions.includes(key))
+    .map(key => PERMISSION_ITEMS[key]) as NavigationMenuItem[]
 
 </script>

@@ -12,7 +12,7 @@
 
         <div class="flex items-center gap-2 text-sm text-gray-400">
           <span class="text-green-400">●</span>
-          Secure Linux Training Platform V0.1.3
+          Secure Linux Training Platform
         </div>
 
         <h1 class="text-5xl font-semibold leading-tight">

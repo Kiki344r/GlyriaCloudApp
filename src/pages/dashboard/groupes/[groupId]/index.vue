@@ -135,7 +135,7 @@ console.log(groupData)
 const members = groupData ? groupData.group.members.map(user => ({
   id: user.user.UUID,
   name: user.user.firstName + ' ' + user.user.lastName,
-  role: user.role,
+  role: user.role.name,
   online: false,
 })): []
 

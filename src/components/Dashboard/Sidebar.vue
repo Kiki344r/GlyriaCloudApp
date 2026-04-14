@@ -89,10 +89,10 @@ const {getGroupsRef} = useGroups()
 const groups = getGroupsRef()
 
 // On sépare les items pour plus de clarté
-const mainNavigation: NavigationMenuItem[] = [
+const mainNavigation = computed<NavigationMenuItem[]>(() => [
   {
     label: 'Tableau de bord',
-    icon: 'i-heroicons-squares-2x2', // Plus moderne que house
+    icon: 'i-heroicons-squares-2x2',
     to: '/dashboard',
     exact: true
   },
@@ -111,13 +111,13 @@ const mainNavigation: NavigationMenuItem[] = [
     icon: 'i-heroicons-cog-6-tooth',
     to: '/dashboard/settings',
     children: [
-      {label: 'Général', to: '/dashboard/settings'},
-      {label: 'Membres', to: '/dashboard/settings/members'},
-      {label: 'Sécurité', to: '/dashboard/settings/security'},
-      {label: 'Application', to: '/dashboard/settings/app'}
+      { label: 'Général', to: '/dashboard/settings' },
+      { label: 'Membres', to: '/dashboard/settings/members' },
+      { label: 'Sécurité', to: '/dashboard/settings/security' },
+      { label: 'Application', to: '/dashboard/settings/app' }
     ]
   }
-]
+])
 
 const secondaryNavigation: NavigationMenuItem[] = [
   {
