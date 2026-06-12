@@ -59,8 +59,6 @@
 
     <USeparator />
 
-    {{selectedRole}}
-
     <!-- Membres -->
     <div class="space-y-3">
       <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Membres</p>
@@ -108,12 +106,15 @@ if (!group) throw createError({ statusCode: 404, statusMessage: 'Groupe introuva
 
 // -- Permissions disponibles --
 const allPermissions: Permission[] = [
-  { value: 'EXERCISES',        label: 'Exercices',          description: 'Accéder aux exercices du groupe' },
-  { value: 'MANAGE_EXERCISES', label: 'Gérer les exercices', description: 'Créer et modifier les exercices' },
+  { value: 'VMS',              label: 'Virtual Machine',          description: 'Gérer les VMs' },
+  { value: 'MODULES',        label: 'Modules',          description: 'Accéder aux exercices du groupe' },
+  { value: 'MANAGE_VMS',        label: 'Gérer les VMs',          description: 'Voir les VMs des élèves' },
+  { value: 'MANAGE_MODULES', label: 'Gérer les modules', description: 'Créer et modifier les exercices' },
   { value: 'MANAGE_MEMBERS',   label: 'Gérer les membres',  description: 'Ajouter / retirer des membres' },
   { value: 'MANAGE_CODES',     label: 'Gérer les codes',    description: 'Créer et révoquer les codes d\'invitation' },
   { value: 'MANAGE_ROLES',     label: 'Gérer les rôles',    description: 'Créer et modifier les rôles' },
-  { value: 'MANAGE_SETTINGS',  label: 'Gérer les paramètres', description: 'Modifier les paramètres du groupe' }
+  { value: 'MANAGE_SETTINGS',  label: 'Gérer les paramètres', description: 'Modifier les paramètres du groupe' },
+  { value: 'ADMINISTRATOR',  label: 'Administrateur', description: 'Donne les plein pouvoirs' }
 ]
 console.log("group", group)
 // -- Données --

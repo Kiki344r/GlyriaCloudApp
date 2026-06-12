@@ -150,6 +150,121 @@ export default function useGroups() {
     return res.data
   }
 
+  const kickMember = async (data: {groupId: string, userId: string}) => {
+    const { status, data: res } = await requestDelete({
+      version: 1,
+      route: 'group/kick',
+      data
+    })
+    if (!status || !res) return false
+    return res.data
+  }
+
+  const getModules = async (groupId: string) => {
+    const { status, data: res } = await requestGet({
+      version: 1,
+      route: `group/${groupId}/modules`
+    })
+    if (!status || !res) return false
+    return res.data
+  }
+
+  const createModule = async (groupId: string, data: {name: string, description: string, requiresVm: boolean}) => {
+    const { status, data: res } = await requestPost({
+      version: 1,
+      route: `group/${groupId}/modules`,
+      data
+    })
+    if (!status || !res) return false
+    return res.data
+  }
+
+  const editModule = async (groupId: string, moduleId: string, data: {name: string, description: string, requiresVm: boolean}) => {
+    const { status, data: res } = await requestPost({
+      version: 1,
+      route: `group/${groupId}/modules/${moduleId}`,
+      data
+    })
+    if (!status || !res) return false
+    return res.data
+  }
+
+  const deleteModule = async (groupId: string, moduleId: string) => {
+    const { status, data: res } = await requestDelete({
+      version: 1,
+      route: `group/${groupId}/modules/${moduleId}`
+    })
+    if (!status || !res) return false
+    return res.data
+  }
+
+  const getModuleItems = async (groupId: string, moduleId: string) => {
+    const { status, data: res } = await requestGet({
+      version: 1,
+      route: `group/${groupId}/modules/${moduleId}/items`
+    })
+    if (!status || !res) return false
+    return res.data
+  }
+
+  const createModuleItem = async (groupId: string, moduleId: string, data: {title: string, itemType: string, order: number, content: string}) => {
+    const { status, data: res } = await requestPost({
+      version: 1,
+      route: `group/${groupId}/modules/${moduleId}/items`,
+      data
+    })
+    if (!status || !res) return false
+    return res.data
+  }
+
+  const updateModuleItem = async (groupId: string, moduleId: string, itemId: string, data: {title: string, itemType: string, content: string}) => {
+    const { status, data: res } = await requestPost({
+      version: 1,
+      route: `group/${groupId}/modules/${moduleId}/items/${itemId}`,
+      data
+    })
+    if (!status || !res) return false
+    return res.data
+  }
+
+  const updateModuleItemOrder = async (groupId: string, moduleId: string, data: { order: {UUID: string, order: number}[] }) => {
+    const { status, data: res } = await requestPost({
+      version: 1,
+      route: `group/${groupId}/modules/${moduleId}/items/order`,
+      data
+    })
+    if (!status || !res) return false
+    return res.data
+  }
+
+  const deleteModuleItem = async (groupId: string, moduleId: string, itemId: string) => {
+    const { status, data: res } = await requestDelete({
+      version: 1,
+      route: `group/${groupId}/modules/${moduleId}/items/${itemId}`
+    })
+    if (!status || !res) return false
+    return res.data
+  }
+
+  const getVMS = async (groupId: string) => {
+    const { status, data: res } = await requestGet({
+      version: 1,
+      route: `group/${groupId}/vms`
+    })
+    if (!status || !res) return false
+    return res.data
+  }
+
+  const createVM = async (groupId: string, data: {name: string, vmType: string}) => {
+    const { status, data: res } = await requestPost({
+      version: 1,
+      route: `group/${groupId}/vms`,
+      data
+    })
+    if (!status || !res) return false
+    return res.data
+  }
+
   return {
     joinGroup,
     leaveGroup,
@@ -165,5 +280,20 @@ export default function useGroups() {
     getCodes,
     createCode,
     deleteCode,
+    kickMember,
+
+    getModules,
+    createModule,
+    editModule,
+    deleteModule,
+
+    getModuleItems,
+    createModuleItem,
+    updateModuleItem,
+    updateModuleItemOrder,
+    deleteModuleItem,
+
+    getVMS,
+    createVM
   }
 }

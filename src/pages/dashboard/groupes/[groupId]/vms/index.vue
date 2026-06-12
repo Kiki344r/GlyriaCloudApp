@@ -1,0 +1,11 @@
+<template>
+  <div>
+    <DashboardGroupesVM/>
+  </div>
+</template>
+
+<script setup lang="ts">
+definePageMeta({
+  layout: 'dashboard-groupes'
+})
+</script>

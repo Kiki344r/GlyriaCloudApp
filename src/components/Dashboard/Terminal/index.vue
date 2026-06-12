@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import RFB from 'novnc-core'
 
-const {requestGet} = useApi()
+const { requestGet } = useApi()
 const vncContainer = ref<HTMLDivElement | null>(null)
 const rfb = ref<any>(null)
 
@@ -17,30 +17,29 @@ const props = defineProps<{
 }>()
 
 onMounted(async () => {
-  // Récupère l'URL VNC depuis ton backend
   const { data, status } = await requestGet({
     version: 1,
     route: `proxmox/${props.node}/${props.vmid}/vnc`,
   })
 
-  console.log(data, status)
-
   if (!status || !data) return
-  const { url, ticket } = data.data
-  if (!url || !ticket) return
 
-  console.log("Terminal")
-  console.log(url, ticket)
+  const { url, ticket } = data.data
+  if (!url || !ticket || !vncContainer.value) return
 
   const runtimeConfig = useRuntimeConfig()
   const apiUrl = runtimeConfig.public.api_url
-  const wsUrl = apiUrl.replace('http', 'ws').replace('https', 'wss')
+  const wsUrl = apiUrl.replace('http://', 'ws://').replace('https://', 'wss://')
 
-  const rfb = new RFB(vncContainer.value, `${wsUrl}/v1?url=${encodeURIComponent(url)}`, {
-    credentials: {
-      password: ticket
-    },
-  })
+  rfb.value = new RFB(
+      vncContainer.value,
+      `${wsUrl}/v1?url=${encodeURIComponent(url)}`,
+      {
+        credentials: {
+          password: ticket
+        }
+      }
+  )
 
   rfb.value.scaleViewport = true
   rfb.value.resizeSession = true
@@ -62,8 +61,9 @@ onUnmounted(() => {
 <style scoped>
 .vnc-container {
   width: 100%;
-  height: 100%;
-  min-height: 600px;
+  height: calc(100vh - 120px);
+  min-height: 400px;
   background: #000;
+  overflow: hidden;
 }
 </style>

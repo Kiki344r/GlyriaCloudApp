@@ -18,7 +18,7 @@ pub fn run() {
         .plugin(tauri_plugin_autostart::Builder::new().build())
         .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![greet])
+        .invoke_handler(tauri::generate_handler![greet, open_vm_window])
         .setup(|app| {
             let quit_i = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
             let menu = Menu::with_items(app, &[&quit_i])?;
@@ -54,10 +54,26 @@ pub fn run() {
         })
         .on_window_event(|window, event| {
             if let tauri::WindowEvent::CloseRequested { api, .. } = event {
-                api.prevent_close();
-                window.hide().unwrap();
+                if window.label() == "main" {
+                    api.prevent_close();
+                    window.hide().unwrap();
+                }
             }
         })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
+}
+
+#[tauri::command]
+async fn open_vm_window(app: tauri::AppHandle, node: String, vmid: u32) -> Result<(), String> {
+    tauri::WebviewWindowBuilder::new(
+        &app,
+        format!("vm-{}-{}", node, vmid),
+        tauri::WebviewUrl::App(format!("vm-terminal?node={}&vmid={}", node, vmid).into())
+    )
+        .title(format!("VM {} - {}", node, vmid))
+        .inner_size(1133.0, 768.0)
+        .build()
+        .map_err(|e| e.to_string())?;
+    Ok(())
 }

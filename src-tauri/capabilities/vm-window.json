@@ -1,0 +1,28 @@
+{
+  "identifier": "vm-window",
+  "description": "Capabilities for VM terminal windows",
+  "windows": ["vm-*"],
+  "permissions": [
+    "core:default",
+    "opener:default",
+    "http:default",
+    {
+      "identifier": "http:default",
+      "allow": [
+        {
+          "url": "https://api-cloud.glyria.app"
+        },
+        {
+          "url": "https://api-cloud-local.glyria.app"
+        },
+        {
+          "url": "http://localhost:3100"
+        },
+        {
+          "url": "https://pve-cloud-lycee.glyria.app"
+        }
+      ]
+    },
+    "process:default"
+  ]
+}

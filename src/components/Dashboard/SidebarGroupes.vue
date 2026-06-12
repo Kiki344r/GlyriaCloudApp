@@ -162,15 +162,25 @@ const secondaryNavigation: NavigationMenuItem[] = [
 ]
 
 const PERMISSION_ITEMS: Record<string, NavigationMenuItem> = {
-  'EXERCISES': {
-    label: 'Exercices',
+  'VMS': {
+    label: 'VMS',
     icon: 'i-heroicons-command-line',
-    to: `/dashboard/groupes/${groupdId}/exercices`,
+    to: `/dashboard/groupes/${groupdId}/vms`,
   },
-  'MANAGE_EXERCISES': {
-    label: 'Gérer les Exercices',
+  'MODULES': {
+    label: 'Modules',
+    icon: 'i-heroicons-command-line',
+    to: `/dashboard/groupes/${groupdId}/modules`,
+  },
+  'MANAGE_MODULES': {
+    label: 'Gérer les Modules',
     icon: 'i-heroicons-cog-6-tooth',
-    to: `/dashboard/groupes/${groupdId}/manage-exercices`,
+    to: `/dashboard/groupes/${groupdId}/manage-modules`,
+  },
+  'MANAGE_VMS': {
+    label: 'Gérer les VMS',
+    icon: 'i-heroicons-command-line',
+    to: `/dashboard/groupes/${groupdId}/manage-vms`,
   },
   'MANAGE_MEMBERS': {
     label: 'Gérer les Membres',
